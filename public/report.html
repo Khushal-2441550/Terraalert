@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Report</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>TerraAlert</h2>
+    <a href="index.html">Dashboard</a>
+    <a href="report.html">Add Report</a>
+    <a href="alerts.html">View Alerts</a>
+</div>
+
+<div class="main">
+    <h1>Add Disaster Report</h1>
+
+    <form id="reportForm">
+        <input type="text" id="city" placeholder="City" required>
+        <input type="number" id="temperature" placeholder="Temperature" required>
+        <input type="number" id="rainfall" placeholder="Rainfall" required>
+        <input type="number" id="windSpeed" placeholder="Wind Speed" required>
+        <input type="number" id="humidity" placeholder="Humidity" required>
+        <button type="submit">Submit Report</button>
+    </form>
+
+    <p id="responseMsg"></p>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
