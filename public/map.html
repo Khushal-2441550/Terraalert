@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disaster Map</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 20px;
+            z-index: 1;
+        }
+
+        .legend {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            line-height: 18px;
+            color: #555;
+            font-family: sans-serif;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+
+        .legend h4 {
+            margin: 0 0 5px;
+            color: #777;
+            font-size: 14px;
+        }
+
+        #alertDetails {
+            color: white;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        #alertDetails h3 {
+            margin-top: 0;
+        }
+
+        #alertDetails p {
+            margin-bottom: 0;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>TerraAlert</h2>
+        <a href="index.html">Dashboard</a>
+        <a href="report.html">Add Report</a>
+        <a href="alerts.html">View Alerts</a>
+    </div>
+
+    <!-- Main Content -->
+    <section class="content">
+        <div class="main">
+            <h1>Thermal Disaster Map</h1>
+            <div id="alertDetails">Loading alert info...</div>
+            <div id="map"></div>
+        </div>
+    </section>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const alertId = urlParams.get('alertId');
+
+        async function initMap() {
+            if (!alertId) {
+                document.getElementById('alertDetails').innerHTML = "<p>No Alert ID provided in the URL.</p>";
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/alerts/${alertId}`);
+                const alertData = await res.json();
+
+                if (!alertData || !alertData.reportId) {
+                    document.getElementById('alertDetails').innerHTML = "<p>Alert not found.</p>";
+                    return;
+                }
+
+                const report = alertData.reportId;
+                const city = report.city;
+
+                document.getElementById('alertDetails').innerHTML = `
+                <h3>${alertData.alertType} Alert for ${city}</h3>
+                <p><strong>Severity:</strong> ${alertData.severity} | <strong>Risk:</strong> ${alertData.riskIndex.toFixed(2)} | <strong>Temperature:</strong> ${report.temperature}°C </p>
+            `;
+
+                // Geocode city via Nominatim
+                const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`);
+                const geoData = await geoRes.json();
+
+                let lat = 20.5937, lon = 78.9629; // default fallback (India)
+                if (geoData && geoData.length > 0) {
+                    lat = parseFloat(geoData[0].lat);
+                    lon = parseFloat(geoData[0].lon);
+                }
+
+                const map = L.map('map').setView([lat, lon], 10);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap contributors'
+                }).addTo(map);
+
+                // Determine color based on temperature
+                function getColor(t) {
+                    return t > 45 ? '#800026' :
+                        t > 40 ? '#BD0026' :
+                            t > 35 ? '#E31A1C' :
+                                t > 30 ? '#FC4E2A' :
+                                    t > 25 ? '#FD8D3C' :
+                                        t > 20 ? '#FEB24C' :
+                                            t > 15 ? '#FED976' :
+                                                '#FFEDA0';
+                }
+
+                const color = getColor(report.temperature);
+
+                // Add thermal circle
+                L.circle([lat, lon], {
+                    color: color,
+                    fillColor: color,
+                    fillOpacity: 0.6,
+                    radius: 20000 // 20km radius
+                }).addTo(map).bindPopup(`<b>${city}</b><br>Temperature: ${report.temperature}°C<br>Severity: ${alertData.severity}`).openPopup();
+
+                // Legend
+                const legend = L.control({ position: 'bottomright' });
+                legend.onAdd = function (map) {
+                    const div = L.DomUtil.create('div', 'legend');
+                    const grades = [-10, 15, 20, 25, 30, 35, 40, 45];
+                    div.innerHTML += '<h4>Temp (°C)</h4>';
+                    for (let i = 0; i < grades.length; i++) {
+                        div.innerHTML +=
+                            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+                            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+                    }
+                    return div;
+                };
+                legend.addTo(map);
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('alertDetails').innerHTML = "<p>Error loading data.</p>";
+            }
+        }
+
+        initMap();
+    </script>
+</body>
+
+</html>

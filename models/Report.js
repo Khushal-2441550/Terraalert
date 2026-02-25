@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const reportSchema = new mongoose.Schema({
     city: { type: String, required: true },
+    pincode: { type: String, required: true },
     temperature: Number,
     rainfall: Number,
     windSpeed: Number,

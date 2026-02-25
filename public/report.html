@@ -1,43 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Report</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<!-- ============================= -->
-<!-- Sidebar -->
-<!-- ============================= -->
-<div class="sidebar">
-    <h2>TerraAlert</h2>
-    <a href="index.html">Dashboard</a>
-    <a href="report.html">Add Report</a>
-    <a href="alerts.html">View Alerts</a>
-</div>
-
-<!-- ============================= -->
-<!-- Page Content -->
-<!-- ============================= -->
-<section class="content">
-    <div class="main">
-        <h1>Add Disaster Report</h1>
-
-        <form id="reportForm">
-            <input type="text" id="city" placeholder="City" required>
-            <input type="number" id="temperature" placeholder="Temperature" required>
-            <input type="number" id="rainfall" placeholder="Rainfall" required>
-            <input type="number" id="windSpeed" placeholder="Wind Speed" required>
-            <input type="number" id="humidity" placeholder="Humidity" required>
-            <button type="submit">Submit Report</button>
-        </form>
-
-        <p id="responseMsg"></p>
+    <!-- ============================= -->
+    <!-- Sidebar -->
+    <!-- ============================= -->
+    <div class="sidebar">
+        <h2>TerraAlert</h2>
+        <a href="index.html">Dashboard</a>
+        <a href="report.html">Manage Reports</a>
+        <a href="alerts.html">View Alerts</a>
     </div>
-</section>
 
-<script src="script.js"></script>
+    <!-- ============================= -->
+    <!-- Page Content -->
+    <!-- ============================= -->
+    <section class="content">
+        <div class="main">
+            <h1>Manage Disaster Reports</h1>
+
+            <form id="reportForm">
+                <input type="hidden" id="reportId">
+                <input type="text" id="city" placeholder="City" required>
+                <input type="text" id="pincode" placeholder="Pincode" required>
+                <input type="number" id="temperature" placeholder="Temperature" required>
+                <input type="number" id="rainfall" placeholder="Rainfall" required>
+                <input type="number" id="windSpeed" placeholder="Wind Speed" required>
+                <input type="number" id="humidity" placeholder="Humidity" required>
+                <button type="submit" id="submitBtn">Submit Report</button>
+            </form>
+
+            <p id="responseMsg"></p>
+
+            <h2>All Reports</h2>
+            <div id="reportsList" class="card-container">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
 </body>
+
 </html>
