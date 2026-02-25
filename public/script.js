@@ -53,3 +53,14 @@ async function loadAlerts() {
 }
 
 loadAlerts();
+
+window.addEventListener("scroll", () => {
+    const container = document.querySelector(".card-container");
+    if (!container) return;
+
+    const trigger = window.innerHeight * 0.85;
+
+    if (container.getBoundingClientRect().top < trigger) {
+        container.classList.add("visible");
+    }
+});

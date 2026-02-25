@@ -1,11 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TerraAlert Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<!-- ============================= -->
+<!-- Background Sphere -->
+<!-- ============================= -->
+<canvas id="bg"></canvas>
+
+<!-- ============================= -->
+<!-- Sidebar -->
+<!-- ============================= -->
 <div class="sidebar">
     <h2>TerraAlert</h2>
     <a href="index.html">Dashboard</a>
@@ -13,12 +23,44 @@
     <a href="alerts.html">View Alerts</a>
 </div>
 
-<div class="main">
-    <h1>Dashboard</h1>
-    <h2 id="totalAlerts"></h2>
-    <div id="alertContainer" class="cards"></div>
-</div>
+<!-- ============================= -->
+<!-- Hero Section -->
+<!-- ============================= -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>TerraAlert</h1>
+        <p><em>Global Environmental Monitoring System</em></p>
+    </div>
+</section>
 
+<!-- ============================= -->
+<!-- Content Section -->
+<!-- ============================= -->
+<section class="content">
+    <div class="main">
+        <h1>Dashboard</h1>
+        <h2 id="totalAlerts"></h2>
+        <!-- Card container for all alert cards -->
+        <div id="alertContainer" class="card-container">
+            <!-- Example card (can be generated dynamically via JS) -->
+            <div class="card">
+                <h3>Example Alert 1</h3>
+                <p>Description of the alert goes here.</p>
+            </div>
+            <div class="card">
+                <h3>Example Alert 2</h3>
+                <p>Description of the alert goes here.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================= -->
+<!-- Scripts -->
+<!-- ============================= -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="sphere.js"></script>
 <script src="script.js"></script>
+
 </body>
 </html>

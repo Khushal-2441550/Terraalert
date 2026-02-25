@@ -1,22 +1,45 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500&display=swap');
-
+/* ============================= */
+/* Base Layout */
+/* ============================= */
 
 body {
     margin: 0;
     font-family: "Helvetica Neue", Arial, sans-serif;
     background-color: #f8f9fa;
     color: #202122;
-    display: flex;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
+/* ============================= */
+/* Background Sphere Canvas */
+/* ============================= */
+
+#bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+}
+
+/* ============================= */
+/* Sidebar */
+/* ============================= */
 
 .sidebar {
+    position: fixed;
     width: 240px;
+    height: 100vh;
     background-color: #ffffff;
     border-right: 1px solid #dcdcdc;
     padding: 25px 20px;
-    height: 100vh;
+    z-index: 10;
 }
 
 .sidebar h2 {
@@ -39,13 +62,52 @@ body {
     color: #3a4f7a;
 }
 
+/* ============================= */
+/* Hero Section */
+/* ============================= */
+
+.hero {
+    height: 100vh;
+    margin-left: 240px; /* account for sidebar */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.hero-content h1 {
+    font-size: 48px;
+    font-family: Georgia, serif;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.hero-content p {
+    font-size: 18px;
+    color: #555;
+    font-style: italic;
+}
+
+/* ============================= */
+/* Content Section */
+/* ============================= */
+
+.content {
+    margin-left: 240px; /* account for sidebar */
+    background: #f8f9fa;
+    min-height: 100vh;
+    padding: 100px 60px;
+    position: relative;
+    z-index: 2;
+}
 
 .main {
-    flex: 1;
-    padding: 50px;
     max-width: 900px;
 }
 
+/* ============================= */
+/* Headings */
+/* ============================= */
 
 h1, h2, h3 {
     font-family: Georgia, "Times New Roman", serif;
@@ -66,12 +128,14 @@ h2 {
     padding-bottom: 6px;
 }
 
-
 em {
     font-style: italic;
     color: #444;
 }
 
+/* ============================= */
+/* Forms */
+/* ============================= */
 
 form input {
     display: block;
@@ -88,6 +152,9 @@ form input:focus {
     border-color: #3a4f7a;
 }
 
+/* ============================= */
+/* Buttons */
+/* ============================= */
 
 button {
     padding: 8px 18px;
@@ -103,11 +170,29 @@ button:hover {
     background-color: #2f3e5f;
 }
 
-.cards {
+/* ============================= */
+/* Card Container (Fade-in + Layout) */
+/* ============================= */
+
+.card-container {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s ease;
+
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
+    margin-top: 30px;
 }
+
+.card-container.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ============================= */
+/* Individual Cards */
+/* ============================= */
 
 .card {
     background-color: #ffffff;
@@ -115,10 +200,57 @@ button:hover {
     padding: 20px;
     border-radius: 4px;
     width: 260px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .card h3 {
     margin-top: 0;
+}
+
+/* ============================= */
+/* Responsive Adjustments (Optional) */
+/* ============================= */
+
+@media (max-width: 992px) {
+    .hero, .content {
+        margin-left: 200px;
+        padding: 80px 40px;
+    }
+
+    .sidebar {
+        width: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero, .content {
+        margin-left: 0;
+        padding: 60px 20px;
+    }
+
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        display: flex;
+        flex-direction: row;
+        padding: 15px;
+        justify-content: space-around;
+    }
+
+    .sidebar h2 {
+        display: none;
+    }
+
+    .sidebar a {
+        margin: 0 10px;
+    }
 }
 
 .low {
