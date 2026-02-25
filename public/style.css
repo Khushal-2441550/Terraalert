@@ -1,46 +1,106 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500&display=swap');
+
+
 body {
     margin: 0;
-    font-family: Arial;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #202122;
     display: flex;
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
-    color: white;
 }
 
+
 .sidebar {
-    width: 220px;
-    background: #111;
-    padding: 20px;
+    width: 240px;
+    background-color: #ffffff;
+    border-right: 1px solid #dcdcdc;
+    padding: 25px 20px;
     height: 100vh;
+}
+
+.sidebar h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: bold;
+    font-size: 22px;
+    margin-bottom: 25px;
 }
 
 .sidebar a {
     display: block;
-    color: white;
+    color: #202122;
     text-decoration: none;
-    margin: 15px 0;
+    margin: 12px 0;
+    font-size: 15px;
 }
 
 .sidebar a:hover {
-    color: #00c6ff;
+    text-decoration: underline;
+    color: #3a4f7a;
 }
+
 
 .main {
     flex: 1;
-    padding: 40px;
+    padding: 50px;
+    max-width: 900px;
 }
+
+
+h1, h2, h3 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: bold;
+    color: #000;
+    margin-top: 30px;
+}
+
+h1 {
+    font-size: 32px;
+    border-bottom: 1px solid #dcdcdc;
+    padding-bottom: 10px;
+}
+
+h2 {
+    font-size: 24px;
+    border-bottom: 1px solid #e6e6e6;
+    padding-bottom: 6px;
+}
+
+
+em {
+    font-style: italic;
+    color: #444;
+}
+
 
 form input {
     display: block;
-    margin: 10px 0;
+    margin: 12px 0;
     padding: 10px;
     width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
 }
 
+form input:focus {
+    outline: none;
+    border-color: #3a4f7a;
+}
+
+
 button {
-    padding: 10px 20px;
-    background: #00c6ff;
+    padding: 8px 18px;
+    background-color: #3a4f7a;
+    color: white;
     border: none;
+    border-radius: 4px;
+    font-weight: 500;
     cursor: pointer;
+}
+
+button:hover {
+    background-color: #2f3e5f;
 }
 
 .cards {
@@ -50,11 +110,17 @@ button {
 }
 
 .card {
-    background: rgba(255,255,255,0.1);
+    background-color: #ffffff;
+    border: 1px solid #dcdcdc;
     padding: 20px;
-    border-radius: 10px;
-    width: 250px;
+    border-radius: 4px;
+    width: 260px;
 }
+
+.card h3 {
+    margin-top: 0;
+}
+
 .low {
     border-left: 5px solid #2ecc71;
 }
