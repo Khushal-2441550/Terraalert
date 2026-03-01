@@ -1,0 +1,9 @@
+node_modules
+.env
+.vs
+.git
+.gemini
+migrate_pincode.js
+/tmp
+*.webp
+*.png

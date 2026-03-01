@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -9,9 +10,10 @@ app.use(express.json());
 app.use(express.static("public"));
 
 // MongoDB Connection
-mongoose.connect("mongodb://127.0.0.1:27017/terraalert")
-.then(() => console.log("MongoDB Connected"))
-.catch(err => console.log(err));
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/terraalert";
+mongoose.connect(MONGODB_URI)
+    .then(() => console.log("MongoDB Connected"))
+    .catch(err => console.log("MongoDB Error:", err));
 
 // Routes
 app.use("/api/users", require("./routes/users"));
@@ -22,4 +24,10 @@ app.get("/", (req, res) => {
     res.send("TerraAlert Backend Running");
 });
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+// For local testing
+if (require.main === module) {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
+
+module.exports = app;
