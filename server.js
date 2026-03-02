@@ -9,7 +9,9 @@ app.use(express.json());
 app.use(express.static("public"));
 
 // MongoDB Connection
-mongoose.connect("mongodb://127.0.0.1:27017/terraalert")
+require("dotenv").config();
+
+mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log("MongoDB Connected"))
     .catch(err => console.log(err));
 
@@ -23,4 +25,6 @@ app.get("/", (req, res) => {
     res.send("TerraAlert Backend Running");
 });
 
-app.listen(3000, () => console.log("Server running on port 3000"));
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
