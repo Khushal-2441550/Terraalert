@@ -43,40 +43,32 @@
     </div>
 
     <script>
-document.getElementById('loginForm').onsubmit = async (e) => {
-    e.preventDefault();
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
-
-    // 🔐 TEMP ADMIN LOGIN
-    if (email === "admin@terraalert.com" && password === "admin123") {
-        localStorage.setItem('user', JSON.stringify({ 
-            email: email, 
-            role: "admin" 
-        }));
-        window.location.href = "index.html";
-        return;
-    }
-
-    // 👤 Check saved users in localStorage
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-
-    const foundUser = users.find(
-        user => user.email === email && user.password === password
-    );
-
-    if (foundUser) {
-        localStorage.setItem('user', JSON.stringify(foundUser));
-        window.location.href = "index.html";
-    } else {
-        alert("Invalid email or password");
-    }
-};
         document.getElementById('loginForm').onsubmit = async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
 
+            // 🔐 TEMP ADMIN LOGIN
+            if (email === "admin@terraalert.com" && password === "admin123") {
+                localStorage.setItem('user', JSON.stringify({
+                    email: email,
+                    role: "admin",
+                    username: "Admin"
+                }));
+                window.location.href = "index.html";
+                return;
+            }
+
+            // 👤 Check saved users in localStorage (Optional fallback)
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const foundUser = users.find(u => u.email === email && u.password === password);
+            if (foundUser) {
+                localStorage.setItem('user', JSON.stringify(foundUser));
+                window.location.href = "index.html";
+                return;
+            }
+
+            // 🌐 Backend Authentication (Primary)
             try {
                 const res = await fetch('/api/auth/login', {
                     method: 'POST',
@@ -89,9 +81,11 @@ document.getElementById('loginForm').onsubmit = async (e) => {
                     localStorage.setItem('user', JSON.stringify(data.user));
                     window.location.href = 'index.html';
                 } else {
-                    alert(data.message);
+                    alert(data.message || "Login failed");
                 }
-            } catch (err) { alert('Network connection failed'); }
+            } catch (err) {
+                alert('Network connection failed. Please ensure the server is running.');
+            }
         };
     </script>
 </body>
