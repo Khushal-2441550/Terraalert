@@ -99,21 +99,32 @@
                 }
 
                 const report = alertData.reportId;
-                const city = report.city;
+                const city = report.city || "Unknown City";
+                const riskIndex = typeof alertData.riskIndex === 'number' ? alertData.riskIndex.toFixed(2) : "N/A";
+                const temperature = typeof report.temperature === 'number' ? report.temperature : "N/A";
 
                 document.getElementById('alertDetails').innerHTML = `
-                <h3>${alertData.alertType} Alert for ${city}</h3>
-                <p><strong>Severity:</strong> ${alertData.severity} | <strong>Risk:</strong> ${alertData.riskIndex.toFixed(2)} | <strong>Temperature:</strong> ${report.temperature}°C </p>
+                <h3>${alertData.alertType || 'Hazard'} Alert for ${city}</h3>
+                <p><strong>Severity:</strong> ${alertData.severity || 'Unspecified'} | <strong>Risk:</strong> ${riskIndex} | <strong>Temperature:</strong> ${temperature}${temperature !== 'N/A' ? '°C' : ''} </p>
             `;
 
-                // Geocode city via Nominatim
-                const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`);
-                const geoData = await geoRes.json();
-
                 let lat = 20.5937, lon = 78.9629; // default fallback (India)
-                if (geoData && geoData.length > 0) {
-                    lat = parseFloat(geoData[0].lat);
-                    lon = parseFloat(geoData[0].lon);
+
+                try {
+                    const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(city)}&format=json&limit=1`);
+                    const geoData = await geoRes.json();
+
+                    if (geoData && geoData.length > 0) {
+                        lat = parseFloat(geoData[0].lat);
+                        lon = parseFloat(geoData[0].lon);
+                    }
+                } catch (geoErr) {
+                    console.error("Geocoding failed:", geoErr);
+                    // Continue with default coordinates if geocoding fails
+                }
+
+                if (isNaN(lat) || isNaN(lon)) {
+                    lat = 20.5937; lon = 78.9629;
                 }
 
                 const map = L.map('map').setView([lat, lon], 10);
@@ -124,6 +135,7 @@
 
                 // Determine color based on temperature
                 function getColor(t) {
+                    if (typeof t !== 'number') return '#FFEDA0';
                     return t > 45 ? '#800026' :
                         t > 40 ? '#BD0026' :
                             t > 35 ? '#E31A1C' :
@@ -142,7 +154,7 @@
                     fillColor: color,
                     fillOpacity: 0.6,
                     radius: 20000 // 20km radius
-                }).addTo(map).bindPopup(`<b>${city}</b><br>Temperature: ${report.temperature}°C<br>Severity: ${alertData.severity}`).openPopup();
+                }).addTo(map).bindPopup(`<b>${city}</b><br>Temperature: ${temperature}${temperature !== 'N/A' ? '°C' : ''}<br>Severity: ${alertData.severity || 'N/A'}`).openPopup();
 
                 // Legend
                 const legend = L.control({ position: 'bottomright' });
@@ -160,8 +172,8 @@
                 legend.addTo(map);
 
             } catch (err) {
-                console.error(err);
-                document.getElementById('alertDetails').innerHTML = "<p>Error loading data.</p>";
+                console.error("Initialization error:", err);
+                document.getElementById('alertDetails').innerHTML = `<p>Error loading data: ${err.message}</p>`;
             }
         }
 

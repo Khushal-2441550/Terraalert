@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     profilePic: { type: String, default: "" },
-    createdAt: { type: String, default: () => new Date().toISOString() }
+    createdAt: { type: Date, default: Date.now }
 });
 
 // No pre-save hook here to avoid 'bcrypt.hash is not a function' weirdness
